@@ -20,9 +20,11 @@ AM_CPPFLAGS = \
 	-I$(srcdir) \
 	$(NULL)
 
+applets_in_files = org.mate.applets.GvcApplet.mate-panel-applet.desktop.in
+service_in_files = org.mate.panel.applet.GvcAppletFactory.service.in
+
 if ENABLE_PANELAPPLET
 appletsdir       = $(datadir)/mate-panel/applets
-applets_in_files = org.mate.applets.GvcApplet.mate-panel-applet.desktop.in
 applets_DATA     = $(applets_in_files:.mate-panel-applet.desktop.in=.mate-panel-applet)
 
 if IN_PROCESS
@@ -33,7 +35,6 @@ IN_PROCESS = true
 else !IN_PROCESS
 APPLET_LOCATION = $(libexecdir)/mate-volume-control-applet
 servicedir       = $(datadir)/dbus-1/services
-service_in_files = org.mate.panel.applet.GvcAppletFactory.service.in
 service_DATA     = $(service_in_files:.service.in=.service)
 IN_PROCESS = false
 
@@ -51,10 +52,6 @@ $(applets_in_files): $(applets_in_files).in Makefile
 
 $(applets_DATA): $(applets_in_files) Makefile
 	$(AM_V_GEN) $(MSGFMT) --desktop --keyword=Name --keyword=Description --template $< -d $(top_srcdir)/po -o $@
-
-EXTRA_DIST = \
-	$(applets_in_files).in \
-	$(service_in_files)
 
 endif ENABLE_PANELAPPLET
 
@@ -178,5 +175,9 @@ CLEANFILES = \
 MAINTAINERCLEANFILES = \
 	*~ \
 	Makefile.in
+
+EXTRA_DIST = \
+	$(applets_in_files).in \
+	$(service_in_files)
 
 -include $(top_srcdir)/git.mk
