@@ -1,14 +1,13 @@
 if ENABLE_STATUSICON
-
 bin_PROGRAMS = \
 	 mate-volume-control-status-icon \
 	 mate-volume-control \
 	$(NULL)
-else
+else !ENABLE_STATUSICON
 bin_PROGRAMS = \
 	 mate-volume-control \
 	$(NULL)
-endif
+endif !ENABLE_STATUSICON
 
 AM_CPPFLAGS = \
 	$(WARN_CFLAGS) \
@@ -25,13 +24,13 @@ if ENABLE_PANELAPPLET
 appletsdir       = $(datadir)/mate-panel/applets
 applets_in_files = org.mate.applets.GvcApplet.mate-panel-applet.desktop.in
 applets_DATA     = $(applets_in_files:.mate-panel-applet.desktop.in=.mate-panel-applet)
+
 if IN_PROCESS
 APPLET_LOCATION = $(libdir)/libmate-volume-control-applet.so
 mate_volume_control_applet_libdir= $(libdir)
 mate_volume_control_applet_lib_LTLIBRARIES=libmate-volume-control-applet.la
 IN_PROCESS = true
-
-else
+else !IN_PROCESS
 APPLET_LOCATION = $(libexecdir)/mate-volume-control-applet
 servicedir       = $(datadir)/dbus-1/services
 service_in_files = org.mate.panel.applet.GvcAppletFactory.service.in
@@ -42,7 +41,7 @@ org.mate.panel.applet.GvcAppletFactory.service: $(service_in_files)
 	$(AM_V_GEN)sed \
 		-e "s|\@LOCATION\@|$(APPLET_LOCATION)|" \
 		$< > $@
-endif
+endif !IN_PROCESS
 
 $(applets_in_files): $(applets_in_files).in Makefile
 	$(AM_V_GEN)sed \
@@ -57,7 +56,7 @@ EXTRA_DIST = \
 	$(applets_in_files).in \
 	$(service_in_files)
 
-endif
+endif ENABLE_PANELAPPLET
 
 noinst_LTLIBRARIES = libmatevolumecontrol.la
 libmatevolumecontrol_la_SOURCES = \
@@ -81,7 +80,7 @@ mate_volume_control_status_icon_SOURCES = \
 	$(NULL)
 
 mate_volume_control_status_icon_CFLAGS = $(WARN_CFLAGS)
-endif
+endif ENABLE_STATUSICON
 
 if ENABLE_PANELAPPLET
 if IN_PROCESS
@@ -116,7 +115,7 @@ AM_CPPFLAGS += \
 	$(WAYLAND_CFLAGS)
 endif ENABLE_WAYLAND
 
-else
+else !IN_PROCESS
 libexec_PROGRAMS = mate-volume-control-applet
 mate_volume_control_applet_LDADD = \
 	-lm \
@@ -140,8 +139,8 @@ mate_volume_control_applet_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	$(NULL)
 
-endif
-endif
+endif !IN_PROCESS
+endif ENABLE_PANELAPPLET
 
 mate_volume_control_LDADD = \
 	-lm \
