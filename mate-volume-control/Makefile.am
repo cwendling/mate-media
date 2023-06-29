@@ -38,7 +38,7 @@ servicedir       = $(datadir)/dbus-1/services
 service_DATA     = $(service_in_files:.service.in=.service)
 IN_PROCESS = false
 
-org.mate.panel.applet.GvcAppletFactory.service: $(service_in_files)
+$(service_in_files:.service.in=.service): $(service_in_files)
 	$(AM_V_GEN)sed \
 		-e "s|\@LOCATION\@|$(APPLET_LOCATION)|" \
 		$< > $@
